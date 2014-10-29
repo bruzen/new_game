@@ -5,9 +5,9 @@ import uuid as uuid_package
 import time
 
 import pkgutil
-import farm_game
+import new_game
 
-import model
+import model_new as model # 
 import logging
 log = logging.Logging()
 
@@ -19,7 +19,7 @@ action_texts = OrderedDict()
 seeds = {}
 names = {}
 
-class Server(farm_game.swi.SimpleWebInterface):
+class Server(new_game.swi.SimpleWebInterface):
     maximum_steps = 10
     substeps_per_step = 1
 
@@ -48,17 +48,17 @@ class Server(farm_game.swi.SimpleWebInterface):
         else:
             raise Exception('unknown extenstion for %s' % fn)
 
-        data = pkgutil.get_data('farm_game', fn)
+        data = pkgutil.get_data('new_game', fn)
         return (mimetype, data)
 
     #def swi_favicon_ico(self):
-    #    icon = pkgutil.get_data('farm_game', 'static/favicon.ico')
+    #    icon = pkgutil.get_data('new_game', 'static/favicon.ico')
     #    return ('image/ico', icon)
 
     def swi(self):
         if self.user is None:
             return self.create_login_form()
-        html = pkgutil.get_data('farm_game', 'templates/overview.html')
+        html = pkgutil.get_data('new_game', 'templates/overview.html')
         return html
 
     def swi_overview_json(self, command=None):
@@ -129,7 +129,7 @@ class Server(farm_game.swi.SimpleWebInterface):
             seeds[uuid] = uuid_package.UUID(uuid).int & 0x7fffffff
         if self.user is None:
             return self.create_login_form()
-        html = pkgutil.get_data('farm_game', 'templates/play.html')
+        html = pkgutil.get_data('new_game', 'templates/play.html')
         name = self.get_name(uuid)
 
         if seed is not None:
@@ -189,7 +189,7 @@ class Server(farm_game.swi.SimpleWebInterface):
     def generate_json_data(self, uuid):
         data = self.run_game(uuid)
 
-        keys = [k for k in data.keys() if k.startswith('act_')]
+        keys = [k for k in data.keys()]
 
         time = []
         for i in range(len(keys)):
@@ -275,7 +275,7 @@ class Server(farm_game.swi.SimpleWebInterface):
         else:
             html_items = ''
 
-        html = pkgutil.get_data('farm_game', 'templates/history.html')
+        html = pkgutil.get_data('new_game', 'templates/history.html')
 
         return html % dict(items=html_items, users=html_users)
 
